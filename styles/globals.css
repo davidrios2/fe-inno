@@ -1,0 +1,10 @@
+@import "tailwindcss";
+
+.gradient {
+    @apply bg-linear-to-b from-[#593F62] to-[#B681C8];
+}
+
+@theme {
+    --color-primary: #593F62;
+    --color-secondary: #FAFAFA;
+}

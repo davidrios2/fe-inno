@@ -1,0 +1,11 @@
+{
+  "id": 1,
+  "name": "Ricardo",
+  "email": "usuario@udea.edu.co",
+  "role": "Estudiante",
+  "course": "Ingeniería de Software III",
+  "team": {
+    "id": 5,
+    "name": "Equipo A"
+  }
+}
