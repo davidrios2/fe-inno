@@ -7,7 +7,7 @@ import Button from "@/components/atoms/Button";
 export const LoginActions = () => (
     <div className="mt-6 space-y-2">
         <Button
-            type="primary"
+            variant="primary"
             size="sm"
             fullWidth={false}
             className="px-12 cursor-pointer"

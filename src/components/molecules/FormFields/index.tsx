@@ -18,8 +18,14 @@ export interface FormFieldProps {
     fullWidth?: boolean;
     /** label shadow on/off? defaults to true */
     shadow?: boolean;
-
+    [key: string]: any; // Allow any other props
 }
+
+const sizeClasses = {
+    sm: 'h-8 text-sm px-3',
+    md: 'h-10 text-base px-4',
+    lg: 'h-12 text-lg px-4',
+};
 
 export const FormField: React.FC<FormFieldProps> = ({
                                                         id,
@@ -29,18 +35,23 @@ export const FormField: React.FC<FormFieldProps> = ({
                                                         size = 'sm',
                                                         fullWidth = true,
                                                         shadow = true,
+                                                        className = '',
                                                         ...rest
-                                                    }) => (
-    <div className="space-y-1">
-        <Label htmlFor={id} text={label} shadow={shadow} />
-        <Input
-            id={id}
-            type={type}
-            placeholder={placeholder}
-            size={size}
-            fullWidth={fullWidth}
-            className={'rounded-lg'}
-            {...rest}
-        />
-    </div>
-);
+                                                    }) => {
+    const sizeClass = sizeClasses[size];
+    const inputClassName = `rounded-lg ${sizeClass} ${className}`.trim();
+
+    return (
+        <div className="space-y-1">
+            <Label htmlFor={id} text={label} shadow={shadow} />
+            <Input
+                id={id}
+                type={type}
+                placeholder={placeholder}
+                fullWidth={fullWidth}
+                className={inputClassName}
+                {...rest}
+            />
+        </div>
+    );
+};

@@ -14,71 +14,41 @@ export const SignupForm: React.FC<SignupFormProps> = ({ onSwitchToLogin }) => {
     const [name, setName]                           = useState('');
     const [identityDocument, setIdentityDocument]   = useState('');
     const [email, setEmail]                         = useState('');
+    const [password, setPassword]                   = useState('');
     const [courseId, setCourseId]                   = useState('');
     const [roleId, setRoleId]                       = useState('');
     const [error, setError]                         = useState<string | null>(null);
     const [loading, setLoading]                     = useState(false);
 
-    //ncomment when `/users` is available
-    /*
-    const handleSubmit = async (e: React.FormEvent) => {
-      e.preventDefault();
-      setError(null);
-      setLoading(true);
-
-      try {
-        const res = await fetch('/users', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            name,
-            email,
-            identityDocument,
-            roleId: Number(roleId),
-            courseId: Number(courseId),
-          }),
-        });
-
-        if (!res.ok) {
-          const data = await res.json().catch(() => null);
-          throw new Error(data?.message || 'Error registrando usuario');
-        }
-
-        const data = await res.json();
-        console.log('Usuario creado:', data);
-        // ▶ e.g. redirect to /login or show success message
-      } catch (err: any) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-    */
-
-    // mock submit — builds the JSON from the state instead of fetching a file
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError(null);
         setLoading(true);
-        console.log({ name, email, identityDocument, roleId, courseId });
+
         try {
-            // simulate network latency
-            await new Promise(r => setTimeout(r, 500));
+            const host = 'https://innosistemas-back.onrender.com';
+            const res = await fetch(host+'/api/v1/users', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    name,
+                    identityDocument,
+                    email,
+                    password,
+                    roleId: Number(roleId),
+                    courseId: Number(courseId),
+                }),
+            });
 
-            // build the mock response from your form data
-            const mockUser = {
-                id: Math.floor(Math.random() * 10000),    // random or fixed ID
-                name,
-                email,
-                identityDocument,
-                roleId: Number(roleId),
-                courseId: Number(courseId),
-            };
+            if (!res.ok) {
+                const data = await res.json().catch(() => null);
+                throw new Error(data?.message || 'Error registrando usuario');
+            }
 
-            console.log('Mock usuario creado:', mockUser);
-            // — here you could e.g. call a callback, redirect, etc.
+            alert('Usuario registrado exitosamente. Ahora puedes iniciar sesión.');
+            onSwitchToLogin();
         } catch (err: any) {
-            setError(err.message || 'Error creando usuario (mock)');
+            setError(err.message);
         } finally {
             setLoading(false);
         }
@@ -105,7 +75,8 @@ export const SignupForm: React.FC<SignupFormProps> = ({ onSwitchToLogin }) => {
                     size="sm"
                     fullWidth
                     value={name}
-                    onChange={e => setName(e.currentTarget.value)}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
+                    required
                 />
 
                 <FormField
@@ -116,7 +87,8 @@ export const SignupForm: React.FC<SignupFormProps> = ({ onSwitchToLogin }) => {
                     size="sm"
                     fullWidth
                     value={identityDocument}
-                    onChange={e => setIdentityDocument(e.currentTarget.value)}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setIdentityDocument(e.target.value)}
+                    required
                 />
 
                 <FormField
@@ -127,34 +99,49 @@ export const SignupForm: React.FC<SignupFormProps> = ({ onSwitchToLogin }) => {
                     size="sm"
                     fullWidth
                     value={email}
-                    onChange={e => setEmail(e.currentTarget.value)}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
+                    required
+                />
+
+                <FormField
+                    id="password"
+                    label="Contraseña"
+                    type="password"
+                    placeholder="Ingresa tu contraseña"
+                    size="sm"
+                    fullWidth
+                    value={password}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
+                    required
                 />
 
                 <FormField
                     id="curso"
                     label="Curso"
-                    type="text"
-                    placeholder="ID del curso (e.g. 3)"
+                    type="number"
+                    placeholder="ID del curso (e.g. 2)"
                     size="sm"
                     fullWidth
                     value={courseId}
-                    onChange={e => setCourseId(e.currentTarget.value)}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCourseId(e.target.value)}
+                    required
                 />
 
                 <FormField
                     id="rol"
                     label="Rol"
-                    type="text"
-                    placeholder="ID del rol (e.g. 2)"
+                    type="number"
+                    placeholder="ID del rol (e.g. 1)"
                     size="sm"
                     fullWidth
                     value={roleId}
-                    onChange={e => setRoleId(e.currentTarget.value)}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setRoleId(e.target.value)}
+                    required
                 />
 
                 <div className="space-y-4 text-center">
                     <Button
-                        type="primary"
+                        variant="primary"
                         size="md"
                         className="px-12 rounded-lg"
                         disabled={loading}
@@ -169,7 +156,7 @@ export const SignupForm: React.FC<SignupFormProps> = ({ onSwitchToLogin }) => {
                     ¿Ya tienes cuenta?{' '}
                 </Text>
                 <Link
-                    onClick={e => {
+                    onClick={(e: React.MouseEvent) => {
                         e.preventDefault();
                         onSwitchToLogin();
                     }}

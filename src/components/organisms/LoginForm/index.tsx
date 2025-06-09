@@ -15,14 +15,14 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToSignup }) => {
     const [error, setError]       = useState<string | null>(null);
     const [loading, setLoading]   = useState(false);
 
-    // handleSubmit function when endpoint is available
-    /*const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setError(null);
         setLoading(true);
 
         try {
-            const res = await fetch('/auth/login', {
+            const host = 'https://innosistemas-back.onrender.com';
+            const res = await fetch(`${host}/api/v1/auth/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -31,7 +31,6 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToSignup }) => {
             });
 
             if (!res.ok) {
-                // try to read error message from JSON, or fallback
                 const data = await res.json().catch(() => null);
                 throw new Error(data?.message || 'Failed to log in');
             }
@@ -44,27 +43,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToSignup }) => {
         } finally {
             setLoading(false);
         }
-    };*/
-
-    //Mock of the response
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault()
-        setError(null)
-        setLoading(true)
-
-        try {
-            const res = await fetch('/mock/loginResponse.json')
-            if (!res.ok) throw new Error('No pude cargar el mock')
-
-            const data = await res.json()
-            console.log('Mock login:', data)
-            // …do whatever you’d do with a real response…
-        } catch (err: any) {
-            setError(err.message)
-        } finally {
-            setLoading(false)
-        }
-    }
+    };
 
     return (
         <div className="md:w-1/2 p-8 bg-white">
@@ -87,7 +66,8 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToSignup }) => {
                     size="sm"
                     fullWidth
                     value={email}
-                    onChange={e => setEmail(e.currentTarget.value)}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
+                    required
                 />
 
                 <FormField
@@ -98,16 +78,16 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToSignup }) => {
                     size="sm"
                     fullWidth
                     value={password}
-                    onChange={e => setPassword(e.currentTarget.value)}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
+                    required
                 />
 
                 <div className="space-y-4 text-center">
                     <Button
-                        // note: your Button uses default <button> whose default HTML type is "submit"
+                        type="submit"
                         size="md"
                         fullWidth={false}
                         className="px-12 rounded-lg"
-                        // disable while loading
                         disabled={loading}
                     >
                         {loading ? 'Enviando...' : 'Iniciar Sesión'}

@@ -1,0 +1,9 @@
+{
+  "rules": {
+    // Turn off 'no-explicit-any'
+    "@typescript-eslint/no-explicit-any": "off",
+
+    // Turn off 'no-unused-vars'
+    "@typescript-eslint/no-unused-vars": "off"
+  }
+}
