@@ -1,9 +1,11 @@
-// src/components/organisms/LoginForm.tsx
+'use client';
+
 import React, { useState } from 'react';
 import { Title, Text } from '@/components/atoms/Typography';
 import Button            from '@/components/atoms/Button';
 import Link              from '@/components/atoms/Link';
 import { FormField }     from '@/components/molecules/FormFields';
+import { useRouter } from 'next/navigation';
 
 export interface LoginFormProps {
     onSwitchToSignup: () => void
@@ -14,6 +16,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToSignup }) => {
     const [password, setPassword] = useState('');
     const [error, setError]       = useState<string | null>(null);
     const [loading, setLoading]   = useState(false);
+    const router = useRouter();
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -37,7 +40,9 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToSignup }) => {
 
             const data = await res.json();
             console.log('Logged in successfully:', data);
-            // ▶ e.g. save token, redirect, update context, etc.
+            localStorage.setItem('accessToken', data.accessToken);
+            router.push('/teams');
+
         } catch (err: any) {
             setError(err.message);
         } finally {
